@@ -128,21 +128,26 @@ ReportDefinitions:
         type: string
         source: ep
         total: false
-      - name: taxhead
-        label: Tax Head
+      - name: service_category
+        label: Service Category
         type: string
-        source: eb3
+        source: epd
+        total: false
+      - name: service_type
+        label: Service Type
+        type: string
+        source: epd
         total: false
       - name: transaction_count
         label: Transaction Count
         type: number
-        source: eb3
+        source: epd
         total: true
         rowTotal: true
       - name: total_amount
         label: Total Amount
         type: number
-        source: eb3
+        source: epd
         total: true
         rowTotal: true
     searchParams:
@@ -156,45 +161,32 @@ ReportDefinitions:
       - name: fromDate
         label: From Date
         type: epoch
-        source: ep
+        source: epd
         isMandatory: false
-        searchClause: AND ep.createdtime >= $fromDate
+        searchClause: AND epd.receiptdate >= $fromDate
       - name: toDate
         label: To Date
         type: epoch
-        source: ep
+        source: epd
         isMandatory: false
-        searchClause: AND ep.createdtime <= $toDate
+        searchClause: AND epd.receiptdate <= $toDate
     query: >
       SELECT
         UPPER(SPLIT_PART(ep.tenantid, '.', 2)) AS tenant,
-        REPLACE(
-          SUBSTRING(eb3.taxheadcode FROM POSITION('_' IN eb3.taxheadcode) + 1),
-          '_',
-          ' '
-        ) AS taxhead,
+        REPLACE(SPLIT_PART(epd.businessservice, '.', 1), '_', ' ') AS service_category,
+        REPLACE(SPLIT_PART(epd.businessservice, '.', 2), '_', ' ') AS service_type,
         COUNT(*) AS transaction_count,
-        SUM(eb3.amount) AS total_amount
+        SUM(epd.amountpaid) AS total_amount
       FROM egcl_paymentdetail epd
       INNER JOIN egcl_payment ep
         ON epd.paymentid = ep.id
-      INNER JOIN egcl_bill eb
-        ON eb.id = epd.billid
-      INNER JOIN egcl_billdetial eb2
-        ON eb.id = eb2.billid
-      INNER JOIN egcl_billaccountdetail eb3
-        ON eb2.id = eb3.billdetailid
-       AND eb3.amount <> 0
       WHERE 1=1
     groupby: >
       GROUP BY
       UPPER(SPLIT_PART(ep.tenantid, '.', 2)),
-      REPLACE(
-        SUBSTRING(eb3.taxheadcode FROM POSITION('_' IN eb3.taxheadcode) + 1),
-        '_',
-        ' '
-      )
+      REPLACE(SPLIT_PART(epd.businessservice, '.', 1), '_', ' '),
+      REPLACE(SPLIT_PART(epd.businessservice, '.', 2), '_', ' ')
     orderby: >
       ORDER BY
       tenant,
-      taxhead         
+      service_type      
