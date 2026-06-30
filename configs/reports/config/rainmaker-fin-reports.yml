@@ -117,3 +117,84 @@ ReportDefinitions:
          ORDER BY
          created_date DESC,
          tenant
+
+  - reportName: headwiseCountReport
+    summary: Headwise Count Report
+    version: 1.0.0
+    moduleName: rainmaker-fin
+    sourceColumns:
+      - name: tenant
+        label: Tenant Id
+        type: string
+        source: ep
+        total: false
+      - name: taxhead
+        label: Tax Head
+        type: string
+        source: eb3
+        total: false
+      - name: transaction_count
+        label: Transaction Count
+        type: number
+        source: eb3
+        total: true
+        rowTotal: true
+      - name: total_amount
+        label: Total Amount
+        type: number
+        source: eb3
+        total: true
+        rowTotal: true
+    searchParams:
+      - name: tenantid
+        label: Tenant Id
+        type: singlevaluelist
+        pattern: 'list://pg.jmc:Jammu Municipal Corporation,pg.smc:Srinagar Municipal Corporation,pg.jammu:Directorate of Urban Local Bodies Jammu,pg.kashmir:Directorate of Urban Local Bodies Kashmir,pg.akhnoor:Akhnoor Municipal Committee,pg.ghomanhasan:Gho-Manhasan Municipal Committee,pg.bishnah:Bishnah Municipal Committee,pg.arnia:Arnia Municipal Committee,pg.rspura:R.S. Pura Municipal Committee,pg.khour:Khour Municipal Committee,pg.jourian:Jourian Municipal Committee,pg.samba:Samba Municipal Council,pg.vijaypur:Vijaypur Municipal Committee,pg.baribrahmana:Bari Brahmana Municipal Committee,pg.ramgarh:Ramgarh Municipal Committee,pg.hiranagar:Hiranagar Municipal Committee,pg.kathua:Kathua Municipal Council,pg.basholi:Basholi Municipal Committee,pg.lakhanpur:Lakhanpur Municipal Committee,pg.billawar:Billawar Municipal Committee,pg.parole:Parole Municipal Committee,pg.rajouri:Rajouri Municipal Council,pg.sunderbani:Sunderbani Municipal Committee,pg.kalakote:Kalakote Municipal Committee,pg.nowshera:Nowshera Municipal Committee,pg.thanamandi:Thanamandi Municipal Committee,pg.kishtwar:Kishtwar Municipal Council,pg.udhampur:Udhampur Municipal Council,pg.chenani:Chenani Municipal Committee,pg.ramnagar:Ramnagar Municipal Committee,pg.reasi:Reasi Municipal Council,pg.doda:Doda Municipal Council,pg.thathri:Thathri Municipal Committee,pg.bhaderwah:Bhaderwah Municipal Committee,pg.ramban:Ramban Municipal Council,pg.katra:Katra Municipal Committee,pg.batote:Batote Municipal Committee,pg.banihal:Banihal Municipal Committee,pg.poonch:Poonch Municipal Council,pg.surankote:Surankote Municipal Committee,pg.anantnag:Anantnag Municipal Council,pg.achabal:Achabal Municipal Committee,pg.bijbehara:Bijbehara Municipal Committee,pg.kokernag:Kokernag Municipal Committee,pg.mattan:Mattan Municipal Committee,pg.qazigund:Qazigund Municipal Committee,pg.seerhamdan:Seer Hamdan Municipal Committee,pg.dooruveerinag:Dooru-Veerinag Municipal Committee,pg.pahalgam:Pahalgam Municipal Committee,pg.kulgam:Kulgam Municipal Council,pg.yaripora:Yaripora Municipal Committee,pg.frisal:Frisal Municipal Committee,pg.pulwama:Pulwama Municipal Council,pg.pampore:Pampore Municipal Committee,pg.tral:Tral Municipal Committee,pg.khrew:Khrew Municipal Committee,pg.awantipora:Awantipora Municipal Committee,pg.shopian:Shopian Municipal Committee,pg.ganderbal:Ganderbal Municipal Council,pg.budgam:Budgam Municipal Council,pg.khansahib:Khansahib Municipal Committee,pg.beerwah:Beerwah Municipal Committee,pg.chadoora:Chadoora Municipal Committee,pg.chariesharief:Chare Sharief Municipal Committee,pg.baramulla:Baramulla Municipal Council,pg.sopore:Sopore Municipal Council,pg.pattan:Pattan Municipal Committee,pg.uri:Uri Municipal Committee,pg.watergam:Watergam Municipal Committee,pg.gulmargtangmarg:Gulmarg Tangmarg Municipal Committee,pg.bandipora:Bandipora Municipal Council,pg.sumbal:Sumbal Municipal Committee,pg.hajin:Hajin Municipal Committee,pg.kupwara:Kupwara Municipal Council,pg.handwara:Handwara Municipal Committee,pg.langate:Langate Municipal Committee,pg.kunzer:Kunzer Municipal Committee,pg.magam:Magam Municipal Committee,pg.aishmuquam:Aishmuquam Municipal Committee,pg.devsar:Devsar Municipal Committee'
+        source: ep
+        isMandatory: true
+        searchClause: AND ep.tenantid = $tenantid
+      - name: fromDate
+        label: From Date
+        type: epoch
+        source: ep
+        isMandatory: false
+        searchClause: AND ep.createdtime >= $fromDate
+      - name: toDate
+        label: To Date
+        type: epoch
+        source: ep
+        isMandatory: false
+        searchClause: AND ep.createdtime <= $toDate
+    query: >
+      SELECT
+        UPPER(SPLIT_PART(ep.tenantid, '.', 2)) AS tenant,
+        REPLACE(
+          SUBSTRING(eb3.taxheadcode FROM POSITION('_' IN eb3.taxheadcode) + 1),
+          '_',
+          ' '
+        ) AS taxhead,
+        COUNT(*) AS transaction_count,
+        SUM(eb3.amount) AS total_amount
+      FROM egcl_paymentdetail epd
+      INNER JOIN egcl_payment ep
+        ON epd.paymentid = ep.id
+      INNER JOIN egcl_bill eb
+        ON eb.id = epd.billid
+      INNER JOIN egcl_billdetial eb2
+        ON eb.id = eb2.billid
+      INNER JOIN egcl_billaccountdetail eb3
+        ON eb2.id = eb3.billdetailid
+       AND eb3.amount <> 0
+      WHERE 1=1
+    groupby: >
+      GROUP BY
+      UPPER(SPLIT_PART(ep.tenantid, '.', 2)),
+      REPLACE(
+        SUBSTRING(eb3.taxheadcode FROM POSITION('_' IN eb3.taxheadcode) + 1),
+        '_',
+        ' '
+      )
+    orderby: >
+      ORDER BY
+      tenant,
+      taxhead         
