@@ -30,7 +30,7 @@ ReportDefinitions:
         rowTotal: false
     searchParams:
       - name: schema_name
-        label: Schema Name
+        label: Organisation Name
         type: singlevaluelist
         pattern: 'list://jmc:Jammu Municipal Corporation,smc:Srinagar Municipal Corporation,jammu:Directorate of Urban Local Bodies Jammu,kashmir:Directorate of Urban Local Bodies Kashmir,akhnoor:Akhnoor Municipal Committee,ghomanhasan:Gho-Manhasan Municipal Committee,bishnah:Bishnah Municipal Committee,arnia:Arnia Municipal Committee,rspura:R.S. Pura Municipal Committee,khour:Khour Municipal Committee,jourian:Jourian Municipal Committee,samba:Samba Municipal Council,vijaypur:Vijaypur Municipal Committee,baribrahmana:Bari Brahmana Municipal Committee,ramgarh:Ramgarh Municipal Committee,hiranagar:Hiranagar Municipal Committee,kathua:Kathua Municipal Council,basholi:Basholi Municipal Committee,lakhanpur:Lakhanpur Municipal Committee,billawar:Billawar Municipal Committee,parole:Parole Municipal Committee,rajouri:Rajouri Municipal Council,sunderbani:Sunderbani Municipal Committee,kalakote:Kalakote Municipal Committee,nowshera:Nowshera Municipal Committee,thanamandi:Thanamandi Municipal Committee,kishtwar:Kishtwar Municipal Council,udhampur:Udhampur Municipal Council,chenani:Chenani Municipal Committee,ramnagar:Ramnagar Municipal Committee,reasi:Reasi Municipal Council,doda:Doda Municipal Council,thathri:Thathri Municipal Committee,bhaderwah:Bhaderwah Municipal Committee,ramban:Ramban Municipal Council,katra:Katra Municipal Committee,batote:Batote Municipal Committee,banihal:Banihal Municipal Committee,poonch:Poonch Municipal Council,surankote:Surankote Municipal Committee,anantnag:Anantnag Municipal Council,achabal:Achabal Municipal Committee,bijbehara:Bijbehara Municipal Committee,kokernag:Kokernag Municipal Committee,mattan:Mattan Municipal Committee,qazigund:Qazigund Municipal Committee,seerhamdan:Seer Hamdan Municipal Committee,dooruveerinag:Dooru-Veerinag Municipal Committee,pahalgam:Pahalgam Municipal Committee,kulgam:Kulgam Municipal Council,yaripora:Yaripora Municipal Committee,frisal:Frisal Municipal Committee,pulwama:Pulwama Municipal Council,pampore:Pampore Municipal Committee,tral:Tral Municipal Committee,khrew:Khrew Municipal Committee,awantipora:Awantipora Municipal Committee,shopian:Shopian Municipal Committee,ganderbal:Ganderbal Municipal Council,budgam:Budgam Municipal Council,khansahib:Khansahib Municipal Committee,beerwah:Beerwah Municipal Committee,chadoora:Chadoora Municipal Committee,chariesharief:Chare Sharief Municipal Committee,baramulla:Baramulla Municipal Council,sopore:Sopore Municipal Council,pattan:Pattan Municipal Committee,uri:Uri Municipal Committee,watergam:Watergam Municipal Committee,gulmargtangmarg:Gulmarg Tangmarg Municipal Committee,bandipora:Bandipora Municipal Council,sumbal:Sumbal Municipal Committee,hajin:Hajin Municipal Committee,kupwara:Kupwara Municipal Council,handwara:Handwara Municipal Committee,langate:Langate Municipal Committee,kunzer:Kunzer Municipal Committee,magam:Magam Municipal Committee,aishmuquam:Aishmuquam Municipal Committee,devsar:Devsar Municipal Committee'
         source: lba
@@ -92,25 +92,32 @@ ReportDefinitions:
         label: From Date
         type: epoch
         source: ei
-        isMandatory: false
-        searchClause: AND ei.createddate >= TO_TIMESTAMP($fromDate / 1000)
+        isMandatory: true
+        searchClause: AND TO_TIMESTAMP(ei.createdtime / 1000)::date >= TO_TIMESTAMP($fromDate::bigint / 1000)::date
       - name: toDate
         label: To Date
         type: epoch
         source: ei
-        isMandatory: false
-        searchClause: AND ei.createddate <= TO_TIMESTAMP($toDate / 1000)
+        isMandatory: true
+        searchClause: AND TO_TIMESTAMP(ei.createdtime / 1000)::date <= TO_TIMESTAMP($toDate::bigint / 1000)::date
+      - name: ten
+        label: Organisation Name
+        type: singlevaluelist
+        pattern: 'list://pg.jmc:Jammu Municipal Corporation,pg.smc:Srinagar Municipal Corporation,pg.jammu:Directorate of Urban Local Bodies Jammu,pg.kashmir:Directorate of Urban Local Bodies Kashmir,pg.akhnoor:Akhnoor Municipal Committee,pg.ghomanhasan:Gho-Manhasan Municipal Committee,pg.bishnah:Bishnah Municipal Committee,pg.arnia:Arnia Municipal Committee,pg.rspura:R.S. Pura Municipal Committee,pg.khour:Khour Municipal Committee,pg.jourian:Jourian Municipal Committee,pg.samba:Samba Municipal Council,pg.vijaypur:Vijaypur Municipal Committee,pg.baribrahmana:Bari Brahmana Municipal Committee,pg.ramgarh:Ramgarh Municipal Committee,pg.hiranagar:Hiranagar Municipal Committee,pg.kathua:Kathua Municipal Council,pg.basholi:Basholi Municipal Committee,pg.lakhanpur:Lakhanpur Municipal Committee,pg.billawar:Billawar Municipal Committee,pg.parole:Parole Municipal Committee,pg.rajouri:Rajouri Municipal Council,pg.sunderbani:Sunderbani Municipal Committee,pg.kalakote:Kalakote Municipal Committee,pg.nowshera:Nowshera Municipal Committee,pg.thanamandi:Thanamandi Municipal Committee,pg.kishtwar:Kishtwar Municipal Council,pg.udhampur:Udhampur Municipal Council,pg.chenani:Chenani Municipal Committee,pg.ramnagar:Ramnagar Municipal Committee,pg.reasi:Reasi Municipal Council,pg.doda:Doda Municipal Council,pg.thathri:Thathri Municipal Committee,pg.bhaderwah:Bhaderwah Municipal Committee,pg.ramban:Ramban Municipal Council,pg.katra:Katra Municipal Committee,pg.batote:Batote Municipal Committee,pg.banihal:Banihal Municipal Committee,pg.poonch:Poonch Municipal Council,pg.surankote:Surankote Municipal Committee,pg.anantnag:Anantnag Municipal Council,pg.achabal:Achabal Municipal Committee,pg.bijbehara:Bijbehara Municipal Committee,pg.kokernag:Kokernag Municipal Committee,pg.mattan:Mattan Municipal Committee,pg.qazigund:Qazigund Municipal Committee,pg.seerhamdan:Seer Hamdan Municipal Committee,pg.dooruveerinag:Dooru-Veerinag Municipal Committee,pg.pahalgam:Pahalgam Municipal Committee,pg.kulgam:Kulgam Municipal Council,pg.yaripora:Yaripora Municipal Committee,pg.frisal:Frisal Municipal Committee,pg.pulwama:Pulwama Municipal Council,pg.pampore:Pampore Municipal Committee,pg.tral:Tral Municipal Committee,pg.khrew:Khrew Municipal Committee,pg.awantipora:Awantipora Municipal Committee,pg.shopian:Shopian Municipal Committee,pg.ganderbal:Ganderbal Municipal Council,pg.budgam:Budgam Municipal Council,pg.khansahib:Khansahib Municipal Committee,pg.beerwah:Beerwah Municipal Committee,pg.chadoora:Chadoora Municipal Committee,pg.chariesharief:Chare Sharief Municipal Committee,pg.baramulla:Baramulla Municipal Council,pg.sopore:Sopore Municipal Council,pg.pattan:Pattan Municipal Committee,pg.uri:Uri Municipal Committee,pg.watergam:Watergam Municipal Committee,pg.gulmargtangmarg:Gulmarg Tangmarg Municipal Committee,pg.bandipora:Bandipora Municipal Council,pg.sumbal:Sumbal Municipal Committee,pg.hajin:Hajin Municipal Committee,pg.kupwara:Kupwara Municipal Council,pg.handwara:Handwara Municipal Committee,pg.langate:Langate Municipal Committee,pg.kunzer:Kunzer Municipal Committee,pg.magam:Magam Municipal Committee,pg.aishmuquam:Aishmuquam Municipal Committee,pg.devsar:Devsar Municipal Committee'
+        source: ei
+        isMandatory: true
+        searchClause: AND ei.tenantid = $ten
     query: >
           SELECT
-          DATE(ei.createddate) AS created_date,
+          TO_TIMESTAMP(ei.createdtime / 1000)::date AS created_date,
           UPPER(SPLIT_PART(ei.tenantid, '.', 2)) AS tenant,
           COUNT(*) AS transaction_count,
-          SUM(ei.amount) AS total_amount
-          FROM egf_instrument ei
+          SUM(ei.totalamountpaid) AS total_amount
+          FROM egcl_payment ei
           WHERE 1=1
     groupby: >
           GROUP BY
-          DATE(ei.createddate),
+          TO_TIMESTAMP(ei.createdtime / 1000)::date,
           UPPER(SPLIT_PART(ei.tenantid, '.', 2))
 
     orderby: >
@@ -124,7 +131,7 @@ ReportDefinitions:
     moduleName: rainmaker-fin
     sourceColumns:
       - name: tenant
-        label: Tenant Id
+        label: Organisation Name
         type: string
         source: ep
         total: false
@@ -152,7 +159,7 @@ ReportDefinitions:
         rowTotal: true
     searchParams:
       - name: ten
-        label: Tenant Id
+        label: Organisation Name
         type: singlevaluelist
         pattern: 'list://pg.jmc:Jammu Municipal Corporation,pg.smc:Srinagar Municipal Corporation,pg.jammu:Directorate of Urban Local Bodies Jammu,pg.kashmir:Directorate of Urban Local Bodies Kashmir,pg.akhnoor:Akhnoor Municipal Committee,pg.ghomanhasan:Gho-Manhasan Municipal Committee,pg.bishnah:Bishnah Municipal Committee,pg.arnia:Arnia Municipal Committee,pg.rspura:R.S. Pura Municipal Committee,pg.khour:Khour Municipal Committee,pg.jourian:Jourian Municipal Committee,pg.samba:Samba Municipal Council,pg.vijaypur:Vijaypur Municipal Committee,pg.baribrahmana:Bari Brahmana Municipal Committee,pg.ramgarh:Ramgarh Municipal Committee,pg.hiranagar:Hiranagar Municipal Committee,pg.kathua:Kathua Municipal Council,pg.basholi:Basholi Municipal Committee,pg.lakhanpur:Lakhanpur Municipal Committee,pg.billawar:Billawar Municipal Committee,pg.parole:Parole Municipal Committee,pg.rajouri:Rajouri Municipal Council,pg.sunderbani:Sunderbani Municipal Committee,pg.kalakote:Kalakote Municipal Committee,pg.nowshera:Nowshera Municipal Committee,pg.thanamandi:Thanamandi Municipal Committee,pg.kishtwar:Kishtwar Municipal Council,pg.udhampur:Udhampur Municipal Council,pg.chenani:Chenani Municipal Committee,pg.ramnagar:Ramnagar Municipal Committee,pg.reasi:Reasi Municipal Council,pg.doda:Doda Municipal Council,pg.thathri:Thathri Municipal Committee,pg.bhaderwah:Bhaderwah Municipal Committee,pg.ramban:Ramban Municipal Council,pg.katra:Katra Municipal Committee,pg.batote:Batote Municipal Committee,pg.banihal:Banihal Municipal Committee,pg.poonch:Poonch Municipal Council,pg.surankote:Surankote Municipal Committee,pg.anantnag:Anantnag Municipal Council,pg.achabal:Achabal Municipal Committee,pg.bijbehara:Bijbehara Municipal Committee,pg.kokernag:Kokernag Municipal Committee,pg.mattan:Mattan Municipal Committee,pg.qazigund:Qazigund Municipal Committee,pg.seerhamdan:Seer Hamdan Municipal Committee,pg.dooruveerinag:Dooru-Veerinag Municipal Committee,pg.pahalgam:Pahalgam Municipal Committee,pg.kulgam:Kulgam Municipal Council,pg.yaripora:Yaripora Municipal Committee,pg.frisal:Frisal Municipal Committee,pg.pulwama:Pulwama Municipal Council,pg.pampore:Pampore Municipal Committee,pg.tral:Tral Municipal Committee,pg.khrew:Khrew Municipal Committee,pg.awantipora:Awantipora Municipal Committee,pg.shopian:Shopian Municipal Committee,pg.ganderbal:Ganderbal Municipal Council,pg.budgam:Budgam Municipal Council,pg.khansahib:Khansahib Municipal Committee,pg.beerwah:Beerwah Municipal Committee,pg.chadoora:Chadoora Municipal Committee,pg.chariesharief:Chare Sharief Municipal Committee,pg.baramulla:Baramulla Municipal Council,pg.sopore:Sopore Municipal Council,pg.pattan:Pattan Municipal Committee,pg.uri:Uri Municipal Committee,pg.watergam:Watergam Municipal Committee,pg.gulmargtangmarg:Gulmarg Tangmarg Municipal Committee,pg.bandipora:Bandipora Municipal Council,pg.sumbal:Sumbal Municipal Committee,pg.hajin:Hajin Municipal Committee,pg.kupwara:Kupwara Municipal Council,pg.handwara:Handwara Municipal Committee,pg.langate:Langate Municipal Committee,pg.kunzer:Kunzer Municipal Committee,pg.magam:Magam Municipal Committee,pg.aishmuquam:Aishmuquam Municipal Committee,pg.devsar:Devsar Municipal Committee'
         source: ep
